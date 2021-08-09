@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -55,7 +54,8 @@ public class ProductoHandler {
 		return producto.flatMap(p -> {
 
 			Errors errors = new BeanPropertyBindingResult(p, Producto.class.getName());
-
+			validator.validate(p, errors);
+			
 			if (errors.hasErrors()) {
 				return Flux.fromIterable(errors.getFieldErrors())
 						.map(fieldError -> String.format("Field %s %s", fieldError.getField(),
